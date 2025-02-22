@@ -1,11 +1,13 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
+import { useUserInfo } from "@/hooks/useUser"
 import { useEffect, useState } from "react"
 
 export function LinkProfile() {
   const [isCopiedLink, setIsCopiedLink] = useState(false)
   const [origin, setOrigin] = useState('')
+  const { user } = useUserInfo()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -13,10 +15,12 @@ export function LinkProfile() {
     }
   }, [])
 
+  if (!user) return null
+
   const copyLink = async () => {
     try {
       if (typeof window !== 'undefined') {
-        const url = `${origin}/nvrztest`
+        const url = `${origin}/${user.username}`
         await navigator.clipboard.writeText(url)
         setIsCopiedLink(true)
 
@@ -43,7 +47,7 @@ export function LinkProfile() {
       <div className="flex flex-col justify-center text-center py-4 px-4 items-center gap-2 md:flex-row md:justify-between md:text-left">
         <span className="text-sm">
           <span>🔥 Your nvrzTreeClone is live: </span> {origin}
-          / @nvrzTest
+          /@{user.username}
         </span>
 
         <Button 
