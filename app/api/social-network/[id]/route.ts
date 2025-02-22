@@ -1,11 +1,14 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function PATCH(req: Request, 
-  {params} : {params: {id: string}}
+type PatchParams = { id: string}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<PatchParams> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const { link } = await req.json()
 
     if (!id || !link) {
@@ -40,24 +43,29 @@ export async function PATCH(req: Request,
   }
 }
 
-export async function DELETE(req: Request, { params } : {params: {id: string}}) {
+type DeleteParams = { id: string };
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<DeleteParams> } // Next.js ahora pasa params como una promesa
+) {
   try {
-    const { id } = params
+    const { id } = await params; // Esperamos la promesa para obtener el id
 
     if (!id) {
-      return NextResponse.json({error: "ID is required"}, {status: 400})
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
     const deletedLink = await db.link.delete({
-      where: { id }
-    })
+      where: { id },
+    });
 
-    return NextResponse.json(deletedLink)
+    return NextResponse.json(deletedLink);
   } catch (error) {
-    console.error("DELETE LINK ERROR: ", error)
+    console.error("DELETE LINK ERROR:", error);
     return NextResponse.json(
-      {error: "Failed to delete the link"},
-      {status: 500}
-    )
+      { error: "Failed to delete the link" },
+      { status: 500 }
+    );
   }
 }
