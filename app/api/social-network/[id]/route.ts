@@ -1,11 +1,9 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-type PatchParams = { id: string}
-
 export async function PATCH(
   req: Request,
-  { params }: { params: Promise<PatchParams> }
+  { params }: { params: Promise<{ id: string}> }
 ) {
   try {
     const { id } = await params
@@ -43,11 +41,9 @@ export async function PATCH(
   }
 }
 
-type DeleteParams = { id: string };
-
 export async function DELETE(
   req: Request,
-  { params }: { params: Promise<DeleteParams> } // Next.js ahora pasa params como una promesa
+  { params }: { params: Promise<{ id: string }> } // Next.js ahora pasa params como una promesa
 ) {
   try {
     const { id } = await params; // Esperamos la promesa para obtener el id
