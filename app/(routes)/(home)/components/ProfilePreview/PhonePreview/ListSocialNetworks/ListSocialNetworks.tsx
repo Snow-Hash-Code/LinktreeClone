@@ -1,5 +1,7 @@
 import { useUserInfo } from "@/hooks/useUser"
+import { ExternalLink } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export function ListSocialNetworks() {
   const { links } = useUserInfo()
@@ -7,14 +9,16 @@ export function ListSocialNetworks() {
   if (!links) return null
 
   return (
-    <ul className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
-      { links.map((link) => (
-        <li key={link.id}>
-          <a href={link.link || ''} target="_blank" rel="noreferrer">
-            <Image src={link.icon || ''} alt="Icon" width={40} height={40}/>
-          </a>
-        </li>
+    <div className="flex flex-col gap-5 mt-10 w-full">
+      {links.map((link) => (
+        <div key={link.id} className="bg-cyan-800 text-white w-full px-4 py-2 items-center justify-center rounded-full shadow-md hover:bg-violet-200 hover:text-violet-800 transition-all duration-200 group">
+          <Link href={link.link || ""} target="_blank" className="flex justify-between items-center">
+            <Image src={link.icon || ""} alt="Icon" height={20} width={20} className="group-hover:grayscale-0 hover:scale-110 transition-all duration-200 filter grayscale"/>
+            <p className="font-medium">{link.name}</p>
+            <ExternalLink className="w-4 h-4" />
+          </Link>
+        </div>
       ))}
-    </ul>
+    </div>
   )
 }

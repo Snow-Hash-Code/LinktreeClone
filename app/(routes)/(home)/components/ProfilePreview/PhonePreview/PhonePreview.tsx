@@ -19,7 +19,7 @@ export function PhonePreview() {
           <div className="relative z-10 flex flex-col items-center p-6 justify-between h-full">
             <Image src={user?.avatarUrl || '/avatar.png'} alt="Avatar" width={50} height={50} className="rounded-full object-cover aspect-square"/>
 
-            <p className="font-semibold text-sm mt-2 text-blue-700">@{user?.username}</p>
+            <p className="font-semibold text-sm mt-2 text-cyan-900">@{user?.username}</p>
 
             {user?.bio && (
               <div className="mt-2">
@@ -27,7 +27,7 @@ export function PhonePreview() {
               </div>
             )}
 
-            <div className="min-h-[70%]">
+            <div className="min-h-[70%] w-full">
               <ListSocialNetworks />
             </div>
 
