@@ -80,7 +80,7 @@ export function StepFour() {
         )}
         {showUploadPhoto ? (
           <UploadButton 
-            className="rounded-md text-slate-800 bg-gray-400 h-full"
+            className="rounded-md text-slate-800 bg-indigo-200 h-full"
             endpoint="profileImage"
             onClientUploadComplete={(res) => {
               setPhotoUrl(res?.[0].url)

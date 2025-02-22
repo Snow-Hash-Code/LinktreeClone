@@ -6,18 +6,25 @@ import { useUser } from "@clerk/nextjs";
 import { Link, User } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { LoaderProfile } from "@/components/Shared";
-import { StepConfigUserProvider } from "@/contexts";
+import { StepConfigUserProvider, UserProvider } from "@/contexts";
 import { HandleSteps } from "./components";
+import { ProfileInfo } from "./components/ProfileInfo/ProfileInfo";
+import { ProfilePreview } from "./components/ProfilePreview/ProfilePreview";
+import { ListSocialNetworks } from "./components/ListSocialNetworks";
 
 export default function HomePage() {
   const { user } = useUser()
   const [isFirstVisit, setIsFirstVisit] = useState(false)
-  const [reload, setReaload] = useState(false)
+  const [reload, setReload] = useState(false)
   const [infoUser, setInfoUser] = useState<(User & { links: Link[]}) | null>(null)
+
 
   useEffect(() => {
     const checkFirstLogin = async () => {
       const response = await fetch("/api/info-user")
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
       const data = await response.json()
       setInfoUser(data)
       setIsFirstVisit(data.firstLogin)
@@ -27,7 +34,7 @@ export default function HomePage() {
 
     if (reload) {
       checkFirstLogin()
-      setReaload(false)
+      setReload(false)
     }
   }, [user?.id, reload, user])
 
@@ -38,35 +45,34 @@ export default function HomePage() {
   if (isFirstVisit) {
     return (
       <StepConfigUserProvider>
-        <HandleSteps onReload={setReaload} />
+        <HandleSteps onReload={setReload} />
       </StepConfigUserProvider>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[60%_auto] gap-4 px-4">
-      <div>
-        {/* link profile */}
-        <LinkProfile />
-
-        {/* profile info */}
+    <UserProvider>
+      <div className="grid grid-cols-1 md:grid-cols-[60%_auto] gap-4 px-4">
         <div>
-          <p>Profile info...</p>
-        </div>
+          <LinkProfile />
 
-        <div className="mt-20 flex flex-col items-center">
-          <div className="py-10 text-center justify-center flex flex-col items-center text-gray-400 font-semibold">
-            <TreePalm className="h-20 w-20" strokeWidth={1} />
-            <p className="font-thin">Show the world who you are.</p>
-            <p className="font-thin">Add a link to get started.</p>
-          </div>
-        </div>
-      </div>
+          <ProfileInfo onReload={setReload} />
 
-      {/* Profile preview */}
-      <div>
-        <p>Profile preview...</p>
+          {infoUser.links.length > 0 ? (
+            <ListSocialNetworks links={infoUser.links} onReload={setReload}/>
+          ) : (
+            <div className="mt-20 flex flex-col items-center">
+              <div className="py-10 text-center justify-center flex flex-col items-center text-gray-400 font-semibold">
+                <TreePalm className="h-20 w-20" strokeWidth={1} />
+                <p className="font-thin">Show the world who you are.</p>
+                <p className="font-thin">Add a link to get started.</p>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        <ProfilePreview />
       </div>
-    </div>
+    </UserProvider>
   )
 }

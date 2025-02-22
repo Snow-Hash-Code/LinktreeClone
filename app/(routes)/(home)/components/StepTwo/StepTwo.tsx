@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { linksSocialNetwork } from "@/data/LinksSocialNetwork";
 import { useStepConfig } from "@/hooks/useStepConfig";
-import { stepTwoData } from "./StepTwo.data";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -22,7 +22,7 @@ export function StepTwo() {
   const handleContinue = () => {
     setInfoUser((prevInfoUser) => ({
       ...prevInfoUser,
-      platforms: stepTwoData.filter(({name}) => selectedPlatforms.includes(name))
+      platforms: linksSocialNetwork.filter(({name}) => selectedPlatforms.includes(name))
     }))
 
     nextStep()
@@ -34,7 +34,7 @@ export function StepTwo() {
       <p className="text-center">Pickup the ones you are on.</p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4 mt-4">
-        {stepTwoData.map(({icon, name}) => (
+        {linksSocialNetwork.map(({icon, name}) => (
           <div key={name}
           className={`flex flex-col items-center rounded-lg py-3 hover:violet-300 transition-all duration-300 cursor-pointer ${selectedPlatforms.includes(name) ? 'bg-violet-800 text-white' : 'bg-slate-100 text-violet-900'}`}
           onClick={() => handlSelectedPlatform(name)}
