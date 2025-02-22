@@ -43,10 +43,10 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: Promise<{ id: string }> } // Next.js ahora pasa params como una promesa
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params; // Esperamos la promesa para obtener el id
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
